@@ -125,18 +125,12 @@ ssl_only(){
 
 #重载nginx
 reload_nginx(){
-    case "$1" in
-        y)
-            if [[ $nginx_stats == 1 ]];then
-                docker exec -it ${docker_nginx_name} nginx -s reload
-            elif [[ $nginx_stats == 0 ]];then
-                nginx -s reload
-            fi
-        ;;
-        *)
-        echo ""
-        ;;
-        esac
+    [ "$1"x == "y"x ] && 
+    if [[ $nginx_stats == 1 ]];then
+        docker exec -it ${docker_nginx_name} nginx -s reload
+    elif [[ $nginx_stats == 0 ]];then
+        nginx -s reload
+    fi || echo "0"
 }
 
 #主方法
