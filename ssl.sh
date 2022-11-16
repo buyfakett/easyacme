@@ -39,7 +39,7 @@ Font="\033[0m"
 Red="\033[31m" 
 
 #打印帮助文档
-echo_help(){
+function echo_help(){
     echo -e "${Green}
     ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     #此脚本只能用于阿里云的域名
@@ -57,7 +57,7 @@ echo_help(){
 }
 
 #等待5秒
-sleep_5s(){
+function sleep_5s(){
 echo -e "${Red}5秒后继续执行脚本${Font}"
 for i in {5..1}
 do
@@ -67,7 +67,7 @@ done
 }
 
 #root权限
-root_need(){
+function root_need(){
     if [[ $EUID -ne 0 ]]; then
         echo -e "${Red}你现在不是root权限，请使用sudo命令或者联系网站管理员${Font}"
         exit 1
@@ -75,9 +75,9 @@ root_need(){
 }
 
 #是否有acme.sh
-is_acme(){
-     echo -e "${Green}开始判断是否有acme.sh${Font}"
-     if [ ! -f "${workdir}/acme.sh" ];then
+function is_acme(){
+    echo -e "${Green}开始判断是否有acme.sh${Font}"
+    if [ ! -f "${workdir}/acme.sh" ];then
       echo -e "${Green}脚本不存在,开始下载并安装${Font}"
       cd ${workdir}
       curl  https://get.acme.sh | sh
@@ -85,11 +85,11 @@ is_acme(){
     else
       echo -e "${Green}脚本存在${Font}"
       cd ${workdir}
-     fi
+    fi
 }
 
 #域名是否存在
-is_domain(){
+function is_domain(){
     echo -e "${Green}判断域名是否存在${Font}"
     /bin/bash acme.sh --list |awk '{print $1}'|grep -x ${domain}
 
@@ -103,14 +103,14 @@ is_domain(){
 }
 
 #复制ssl证书
-cpssl(){
+function cpssl(){
     echo -e "${Green}开始复制ssl证书${Font}"
     cp -R ${domain}/* ${nginxssl_dir}
     echo -e "${Green}复制ssl证书结束${Font}"
 }
 
 #全部执行（检测）
-all(){
+function all(){
     root_need
     is_acme
     echo -e "${Red}当前域名${domain}${Font}"
@@ -118,13 +118,13 @@ all(){
 }
 
 #只执行ssl证书
-ssl_only(){
+function ssl_only(){
     echo -e "${Red}当前域名${domain}${Font}"
     echo -e "${Green}域名脚本注册执行开始${Font}"
 }
 
 #重载nginx
-reload_nginx(){
+function reload_nginx(){
     [ "$1"x == "y"x ] && 
     if [[ $nginx_stats == 1 ]];then
         docker exec -it ${docker_nginx_name} nginx -s reload
@@ -134,8 +134,11 @@ reload_nginx(){
 }
 
 #主方法
-main(){
+function main(){
     echo_help
+    sleep_5s
+    #当前脚本位置
+    echo "当前脚本位置：$(pwd)/$0，请确认"
     sleep_5s
     if [[ $use_main == 1 ]];then
         all
