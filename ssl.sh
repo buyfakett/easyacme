@@ -16,8 +16,6 @@ dns='dns_dp'
 #export CF_Account_ID='xxxxxxxxxxxxxxx'
 #dns='dns_cf'
 
-#脚本运行目录（默认不要动）
-workdir=/root/.acme.sh
 #nginx的ssl目录
 nginxssl_dir=/root/nginx/ssl
 #你的邮箱
@@ -33,6 +31,8 @@ docker_nginx_name=nginx
 
 ####################################################参数修改结束########################################################################
 
+#脚本运行目录（默认不要动）
+workdir=/root/.acme.sh
 #颜色参数，让脚本更好看
 Green="\033[32m"
 Font="\033[0m"
@@ -58,12 +58,12 @@ function echo_help(){
 
 #等待5秒
 function sleep_5s(){
-echo -e "${Red}5秒后继续执行脚本${Font}"
-for i in {5..1}
-do
-  sleep 1
-  echo -e ${Red}$i${Font}
-done
+    echo -e "${Red}5秒后继续执行脚本${Font}"
+    for i in {5..1}
+    do
+      sleep 1
+      echo -e ${Red}$i${Font}
+    done
 }
 
 #root权限
