@@ -28,6 +28,8 @@ use_main=1
 nginx_stats=1
 #docker中nginx的name或者id（用于reload）
 docker_nginx_name=nginx
+#脚本大师模式和新手模式（脚本设有等待时间看参数，大师模式1可以去掉等待时间）
+shell_type=0
 
 ####################################################参数修改结束########################################################################
 
@@ -138,19 +140,31 @@ function reload_nginx(){
 #主方法
 function main(){
     echo_help
-    sleep_5s
+
+    if [[ $shell_type == 0 ]];then
+        sleep_5s
+    fi
+
     #当前脚本位置
     echo "当前脚本位置：$(pwd)/$0，请确认"
-    sleep_5s
+    if [[ $shell_type == 0 ]];then
+        sleep_5s
+    fi
+
     if [[ $use_main == 1 ]];then
         all
     elif [[ $use_main == 0 ]];then
         ssl_only
     fi
+
     domain
     echo -e "${Green}域名脚本注册执行结束${Font}"
     echo -e "${Red}准备复制并重启nginx${Font}"
-    sleep_5s
+    
+    if [[ $shell_type == 0 ]];then
+        sleep_5s
+    fi
+
     cpssl
     reload_nginx
     echo -e "${Red}ssl证书脚本执行结束${Font}"
