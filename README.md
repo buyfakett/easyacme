@@ -8,5 +8,5 @@
 
 觉得作者写的不错的话可以支持一下作者，请作者喝一杯咖啡哦~
 
-![](./pay_img/ali.webp)![](./wechat.webp)
+![](./pay_img/ali.webp)![](./pay_img/wechat.webp)
 
