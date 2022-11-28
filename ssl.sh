@@ -35,6 +35,17 @@ shell_type=0
 
 #脚本运行目录（默认不要动）
 workdir=/root/.acme.sh
+#远程仓库作者
+git_project_author_name=buyfakett
+#远程仓库项目名
+git_project_project_name=easyacme
+#远程仓库名
+git_project_name=${git_project_author_name}/${git_project_project_name}
+#本地脚本版本号
+shell_version=v1.0.0
+#检查版本（0是不检查；1是检测gitee；2是检测github）
+inspect_script=1
+
 #颜色参数，让脚本更好看
 Green="\033[32m"
 Font="\033[0m"
@@ -75,6 +86,27 @@ function root_need(){
     if [[ $EUID -ne 0 ]]; then
         echo -e "${Red}你现在不是root权限，请使用sudo命令或者联系网站管理员${Font}"
         exit 1
+    fi
+}
+
+#检查版本
+function is_inspect_script(){
+    yum install -y wget jq
+
+    if [ $inspect_script == 1 ];then
+        remote_version=$(wget -qO- -t1 -T2 "https://gitee.com/api/v5/repos/${git_project_name}/releases/latest" |  jq -r '.tag_name')
+    elif [ $inspect_script == 2 ];then
+        remote_version=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${git_project_name}/releases/latest" |  jq -r '.tag_name')
+    fi
+
+    if [ ! ${remote_version}=${shell_version} ];then
+        if [ $inspect_script == 1 ];then
+            wget -qO- -t1 -T2 "https://gitee.com/${git_project_name}/releases/download/${remote_version}/$0"
+        elif [ $inspect_script == 2 ];then
+            wget -qO- -t1 -T2 "https://github.com/${git_project_name}/releases/download/${remote_version}/$0"
+        fi
+    else
+        echo -e "${Green}您现在的版本是最新版${Font}"
     fi
 }
 
@@ -139,6 +171,12 @@ function reload_nginx(){
 
 #主方法
 function main(){
+    if [ ! $inspect_script == 0 ];then
+        echo -e "${Green}您已开始检查版本${Font}"
+        is_inspect_script
+    else
+        echo -e "${Green}您已跳过检查版本${Font}"
+    fi
     echo_help
 
     if [[ $shell_type == 0 ]];then
