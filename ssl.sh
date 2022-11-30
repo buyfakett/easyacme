@@ -30,9 +30,13 @@ nginx_stats=1
 docker_nginx_name=nginx
 #脚本大师模式和新手模式（脚本设有等待时间看参数，大师模式1可以去掉等待时间）
 shell_type=0
+#检查版本（0是不检查；1是检测gitee；2是检测github）
+inspect_script=1
 
 ####################################################参数修改结束########################################################################
 
+#本地脚本版本号
+shell_version=v1.0.1
 #脚本运行目录（默认不要动）
 workdir=/root/.acme.sh
 #远程仓库作者
@@ -41,10 +45,6 @@ git_project_author_name=buyfakett
 git_project_project_name=easyacme
 #远程仓库名
 git_project_name=${git_project_author_name}/${git_project_project_name}
-#本地脚本版本号
-shell_version=v1.0.0
-#检查版本（0是不检查；1是检测gitee；2是检测github）
-inspect_script=1
 
 #颜色参数，让脚本更好看
 Green="\033[32m"
