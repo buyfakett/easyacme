@@ -92,6 +92,7 @@ function root_need(){
 #检查版本
 function is_inspect_script(){
     yum install -y wget jq
+    echo -e "${Green}您已开始检查版本${Font}"
 
     if [ $inspect_script == 1 ];then
         remote_version=$(wget -qO- -t1 -T2 "https://gitee.com/api/v5/repos/${git_project_name}/releases/latest" |  jq -r '.tag_name')
@@ -101,15 +102,13 @@ function is_inspect_script(){
 
     if [ ! "${remote_version}"x = "${shell_version}"x ];then
         if [ $inspect_script == 1 ];then
-            wget -N "https://gitee.com/${git_project_name}/releases/download/${remote_version}/$0"
+            bash <( curl -s -S -L "https://gitee.com/${git_project_name}/releases/download/${remote_version}/$0" )
         elif [ $inspect_script == 2 ];then
-            wget -N "https://github.com/${git_project_name}/releases/download/${remote_version}/$0"
+            bash <( curl -s -S -L "https://github.com/${git_project_name}/releases/download/${remote_version}/$0" )
         fi
     else
         echo -e "${Green}您现在的版本是最新版${Font}"
     fi
-    echo -e "${Green}您已更新最新版本，请重新执行${Font}"
-    exit 1
 }
 
 #是否有acme.sh
@@ -174,7 +173,6 @@ function reload_nginx(){
 #主方法
 function main(){
     if [ ! $inspect_script == 0 ];then
-        echo -e "${Green}您已开始检查版本${Font}"
         is_inspect_script
     else
         echo -e "${Green}您已跳过检查版本${Font}"
