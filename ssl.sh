@@ -18,14 +18,13 @@ dns='dns_ali'
 
 # 你的邮箱
 email=xxx@xxx.com
-# 你的域名
-domain=xxx.com
-
 
 ####################################################参数修改结束########################################################################
 
 # 脚本运行目录
 workdir=/root/.acme.sh
+# 域名
+domain=$1
 
 #颜色参数，让脚本更好看
 Green="\033[32m"
@@ -80,4 +79,14 @@ function main(){
     echo -e "${Red}ssl证书脚本执行结束${Font}"
 }
 
-main
+if [ ! -z $1 ]; then
+    if [ ! ${email}x == 'xxx@xxx.com'x ]
+        main
+    else
+        echo -e "${Red}请修改脚本里的邮箱${Font}"
+        exit 1
+    fi
+else
+    echo -e "${Red}请传入域名${Font}"
+    exit 1
+fi
